@@ -1,0 +1,558 @@
+In [3]: Libro.objects.all().first()
+SELECT "libreria_libro"."isbn",
+       "libreria_libro"."titulo",
+SELECT "libreria_libro"."isbn",
+       "libreria_libro"."titulo",
+       "libreria_libro"."titulo",
+       "libreria_libro"."paginas",
+       "libreria_libro"."paginas",
+       "libreria_libro"."fecha_publicacion",
+       "libreria_libro"."imagen",
+       "libreria_libro"."desc_corta",
+       "libreria_libro"."estatus",
+       "libreria_libro"."categoria",
+       "libreria_libro"."edicion_anterior_id",
+       "libreria_libro"."editorial_id"
+  FROM "libreria_libro"
+ ORDER BY "libreria_libro"."isbn" ASC
+ LIMIT 1
+
+Execution time: 0.000000s [Database: default]
+
+
+In [4]: Libro.objects.all().last()
+SELECT "libreria_libro"."isbn",
+       "libreria_libro"."titulo",
+       "libreria_libro"."paginas",
+       "libreria_libro"."fecha_publicacion",
+       "libreria_libro"."imagen",
+       "libreria_libro"."desc_corta",
+       "libreria_libro"."estatus",
+       "libreria_libro"."categoria",
+       "libreria_libro"."edicion_anterior_id",
+       "libreria_libro"."editorial_id"
+  FROM "libreria_libro"
+ ORDER BY "libreria_libro"."isbn" DESC
+ LIMIT 1
+
+Execution time: 0.000000s [Database: default]
+
+In [5]: Libro.objects.all()[:5]
+Out[5]: SELECT "libreria_libro"."isbn",
+       "libreria_libro"."titulo",
+       "libreria_libro"."paginas",
+       "libreria_libro"."fecha_publicacion",
+       "libreria_libro"."imagen",
+       "libreria_libro"."desc_corta",
+       "libreria_libro"."estatus",
+       "libreria_libro"."categoria",
+       "libreria_libro"."edicion_anterior_id",
+       "libreria_libro"."editorial_id"
+  FROM "libreria_libro"
+ LIMIT 5
+
+Execution time: 0.001100s [Database: default]
+<QuerySet []>
+
+In [6]: Libro.objects.filter(isbn__startswith="16")
+Out[6]: SELECT "libreria_libro"."isbn",
+       "libreria_libro"."titulo",
+       "libreria_libro"."paginas",
+       "libreria_libro"."fecha_publicacion",
+       "libreria_libro"."imagen",
+       "libreria_libro"."desc_corta",
+       "libreria_libro"."estatus",
+       "libreria_libro"."categoria",
+       "libreria_libro"."edicion_anterior_id",
+       "libreria_libro"."editorial_id"
+  FROM "libreria_libro"
+ WHERE "libreria_libro"."isbn" LIKE '16%' ESCAPE '\'
+ LIMIT 21
+
+Execution time: 0.001017s [Database: default]
+<QuerySet []>
+
+
+In [7]: Libro.objects.filter(paginas__gt=200)
+Out[7]: SELECT "libreria_libro"."isbn",
+       "libreria_libro"."titulo",
+       "libreria_libro"."paginas",
+       "libreria_libro"."fecha_publicacion",
+       "libreria_libro"."imagen",
+       "libreria_libro"."desc_corta",
+       "libreria_libro"."estatus",
+       "libreria_libro"."categoria",
+       "libreria_libro"."edicion_anterior_id",
+       "libreria_libro"."editorial_id"
+  FROM "libreria_libro"
+ WHERE "libreria_libro"."paginas" > 200
+ LIMIT 21
+
+Execution time: 0.000000s [Database: default]
+<QuerySet []>
+
+In [8]: Libro.objects.filter(paginas__gt=200).exclude(isbn__in=('1933988592','1884777600'))
+Out[8]: SELECT "libreria_libro"."isbn",
+       "libreria_libro"."titulo",
+       "libreria_libro"."paginas",
+       "libreria_libro"."fecha_publicacion",
+       "libreria_libro"."imagen",
+       "libreria_libro"."desc_corta",
+       "libreria_libro"."estatus",
+       "libreria_libro"."categoria",
+       "libreria_libro"."edicion_anterior_id",
+       "libreria_libro"."editorial_id"
+  FROM "libreria_libro"
+ WHERE ("libreria_libro"."paginas" > 200 AND NOT ("libreria_libro"."isbn" IN ('1933988592', '1884777600')))
+ LIMIT 21
+
+Execution time: 0.000000s [Database: default]
+<QuerySet []>
+
+In [9]: Libro.objects.filter(paginas__gte=200).values('isbn','paginas')
+Out[9]: SELECT "libreria_libro"."isbn",
+       "libreria_libro"."paginas"
+  FROM "libreria_libro"
+ WHERE "libreria_libro"."paginas" >= 200
+ LIMIT 21
+
+Execution time: 0.000000s [Database: default]
+<QuerySet []>
+
+In [10]: Libro.objects.filter(paginas__lt=200).count()
+SELECT COUNT(*) AS "__count"
+  FROM "libreria_libro"
+ WHERE "libreria_libro"."paginas" < 200
+
+Execution time: 0.000000s [Database: default]
+Out[10]: 0
+
+
+In [11]: Libro.objects.filter(fecha_publicacion__year=2012).values('isbn','fecha_publicacion')
+Out[11]: SELECT "libreria_libro"."isbn",
+       "libreria_libro"."fecha_publicacion"
+  FROM "libreria_libro"
+ WHERE "libreria_libro"."fecha_publicacion" BETWEEN '2012-01-01' AND '2012-12-31'
+ LIMIT 21
+
+Execution time: 0.000000s [Database: default]
+<QuerySet []>
+
+
+In [12]: Libro.objects.filter(isbn__regex=r'19\d{8}$').values('isbn')
+Out[12]: SELECT "libreria_libro"."isbn"
+  FROM "libreria_libro"
+ WHERE "libreria_libro"."isbn" REGEXP '19\d{8}$'
+ LIMIT 21
+
+Execution time: 0.000000s [Database: default]
+<QuerySet []>
+
+
+In [13]: Libro.objects.values('isbn','paginas').order_by('-paginas')[3]
+SELECT "libreria_libro"."isbn",
+       "libreria_libro"."paginas"
+  FROM "libreria_libro"
+ ORDER BY "libreria_libro"."paginas" DESC
+ LIMIT 1
+OFFSET 3
+
+
+In [14]: Libro.objects.filter(paginas__gte=200).explain
+Out[14]: SELECT "libreria_libro"."isbn",
+       "libreria_libro"."titulo",
+       "libreria_libro"."paginas",
+       "libreria_libro"."fecha_publicacion",
+       "libreria_libro"."imagen",
+       "libreria_libro"."desc_corta",
+       "libreria_libro"."estatus",
+       "libreria_libro"."categoria",
+       "libreria_libro"."edicion_anterior_id",
+       "libreria_libro"."editorial_id"
+  FROM "libreria_libro"
+ WHERE "libreria_libro"."paginas" >= 200
+ LIMIT 21
+
+Execution time: 0.000000s [Database: default]
+<bound method QuerySet.explain of <QuerySet []>>
+
+In [15]: Libro.objects.filter(categoria__icontains='python').aggregate(Sum('paginas'))
+SELECT SUM("libreria_libro"."paginas") AS "paginas__sum"
+  FROM "libreria_libro"
+ WHERE "libreria_libro"."categoria" LIKE '%python%' ESCAPE '\'
+
+Execution time: 0.000000s [Database: default]
+Out[15]: {'paginas__sum': None}
+
+In [16]: Libro.objects.filter(categoria__contains='python').values('categoria').annotate(NumeroLibros=Count('*'))
+Out[16]: SELECT "libreria_libro"."categoria",
+       COUNT(*) AS "NumeroLibros"
+  FROM "libreria_libro"
+ WHERE "libreria_libro"."categoria" LIKE '%python%' ESCAPE '\'
+ GROUP BY "libreria_libro"."categoria"
+ LIMIT 21
+
+Execution time: 0.004506s [Database: default]
+<QuerySet []>
+
+In [17]: Libro.objects.filter(categoria__icontains='python').values('categoria','editorial__nombre').annotate(NumeroLibros=Count('*'))
+Out[17]: SELECT "libreria_libro"."categoria",
+       "libreria_editorial"."nombre",
+       COUNT(*) AS "NumeroLibros"
+  FROM "libreria_libro"
+ INNER JOIN "libreria_editorial"
+    ON ("libreria_libro"."editorial_id" = "libreria_editorial"."id")
+ WHERE "libreria_libro"."categoria" LIKE '%python%' ESCAPE '\'
+ GROUP BY "libreria_libro"."categoria",
+          "libreria_editorial"."nombre"
+ LIMIT 21
+
+Execution time: 0.000000s [Database: default]
+<QuerySet []>
+
+
+In [18]: Libro.objects.values('fecha_publicacion').annotate(cant_fec_pub=Count('fecha_publicacion')).filter(cant_fec_pub__gte=5)
+Out[18]: SELECT "libreria_libro"."fecha_publicacion",
+       COUNT("libreria_libro"."fecha_publicacion") AS "cant_fec_pub"
+  FROM "libreria_libro"
+ GROUP BY "libreria_libro"."fecha_publicacion"
+HAVING COUNT("libreria_libro"."fecha_publicacion") >= 5
+ LIMIT 21
+
+Execution time: 0.001016s [Database: default]
+<QuerySet []>
+
+
+In [20]: Libro.objects.values('paginas').filter(paginas__lt=200).distinct()
+Out[20]: SELECT DISTINCT "libreria_libro"."paginas"
+  FROM "libreria_libro"
+ WHERE "libreria_libro"."paginas" < 200
+ LIMIT 21
+
+Execution time: 0.000000s [Database: default]
+<QuerySet []>
+
+In [21]: from django.db.models.functions import Left
+    ...: Libro.objects.annotate(desc_resumida=Left('desc_corta',15)).values('isbn','desc_resumida')
+Out[21]: SELECT "libreria_libro"."isbn",
+       SUBSTR("libreria_libro"."desc_corta", 1, 15) AS "desc_resumida"
+  FROM "libreria_libro"
+ LIMIT 21
+
+Execution time: 0.000000s [Database: default]
+<QuerySet []>
+
+In [22]: from django.db.models import Value as V
+    ...: from django.db.models.functions import Left, Concat
+    ...: Libro.objects.annotate(desc_resumida=Concat(Left('desc_corta',15),V('...'))).values('isbn','desc_resumida')
+Out[22]: SELECT "libreria_libro"."isbn",
+       (COALESCE(SUBSTR("libreria_libro"."desc_corta", 1, 15), '') || COALESCE('...', '')) AS "desc_resumida"
+  FROM "libreria_libro"
+ LIMIT 21
+
+Execution time: 0.000000s [Database: default]
+<QuerySet []>
+
+In [24]: from django.db.models import CharField, Case, Value as V, When
+    ...: from django.db.models.functions import Left, Concat, Length
+    ...:
+    ...: Libro.objects.annotate(
+    ...:     longitud=Length('desc_corta')
+    ...: ).annotate(
+    ...:     desc_resumida=Case(
+    ...:         When(
+    ...:             longitud__gt=50,
+    ...:             then=Concat(Left('desc_corta', 15), V('...'))
+    ...:         ),
+    ...:         default='desc_corta',
+    ...:         output_field=CharField()
+    ...:     )
+    ...: ).values('isbn', 'desc_resumida', 'longitud')
+Out[24]: SELECT "libreria_libro"."isbn",
+       CASE WHEN LENGTH("libreria_libro"."desc_corta") > 50 THEN (COALESCE(SUBSTR("libreria_libro"."desc_corta", 1, 15), '') || COALESCE('...', ''))
+            ELSE "libreria_libro"."desc_corta"
+             END AS "desc_resumida",
+       LENGTH("libreria_libro"."desc_corta") AS "longitud"
+  FROM "libreria_libro"
+ LIMIT 21
+
+Execution time: 0.000000s [Database: default]
+<QuerySet []>
+
+
+In [25]: from django.db.models import F
+    ...: from django.db.models.functions import Left
+    ...: Libro.objects.annotate(tit50= Left('titulo',50), desc50= Left('desc_corta',50)).filter(tit50 = F('desc50')).values('isbn','tit50','desc50')
+Out[25]: SELECT "libreria_libro"."isbn",
+       SUBSTR("libreria_libro"."titulo", 1, 50) AS "tit50",
+       SUBSTR("libreria_libro"."desc_corta", 1, 50) AS "desc50"
+  FROM "libreria_libro"
+ WHERE SUBSTR("libreria_libro"."titulo", 1, 50) = (SUBSTR("libreria_libro"."desc_corta", 1, 50))
+ LIMIT 21
+
+Execution time: 0.012657s [Database: default]
+<QuerySet []>
+
+
+In [26]: from django.db.models.functions import Replace
+    ...: from django.db.models import Value as V
+    ...: Libro.objects.annotate(categoria_sin_comillas = Replace('categoria', V('"'),V('*'))).values('isbn','categoria','categoria_sin_comillas')
+Out[26]: SELECT "libreria_libro"."isbn",
+       "libreria_libro"."categoria",
+       REPLACE("libreria_libro"."categoria", '"', '*') AS "categoria_sin_comillas"
+  FROM "libreria_libro"
+ LIMIT 21
+
+Execution time: 0.000000s [Database: default]
+<QuerySet []>
+
+
+Libro.objects.filter(categoria='[]').update(categoria = Replace('categoria', V('"'),V('*')))
+UPDATE "libreria_libro"
+ SET "categoria" = REPLACE("libreria_libro"."categoria", '"', '*')
+WHERE "libreria_libro"."categoria" = '[]'
+
+In [27]: from django.db.models import Q
+    ...: Libro.objects.filter(
+    ...: (Q(categoria__contains='python') |
+    ...: Q(categoria__contains='java') |
+    ...: Q(categoria__contains='net')) &
+    ...: ~Q(paginas=0))
+Out[27]: SELECT "libreria_libro"."isbn",
+       "libreria_libro"."titulo",
+       "libreria_libro"."paginas",
+       "libreria_libro"."fecha_publicacion",
+       "libreria_libro"."imagen",
+       "libreria_libro"."desc_corta",
+       "libreria_libro"."estatus",
+       "libreria_libro"."categoria",
+       "libreria_libro"."edicion_anterior_id",
+       "libreria_libro"."editorial_id"
+  FROM "libreria_libro"
+ WHERE (("libreria_libro"."categoria" LIKE '%python%' ESCAPE '\' OR "libreria_libro"."categoria" LIKE '%java%' ESCAPE '\' OR "libreria_libro"."categoria" LIKE '%net%'
+ ESCAPE '\') AND NOT ("libreria_libro"."paginas" = 0))
+ LIMIT 21
+
+Execution time: 0.000000s [Database: default]
+<QuerySet []>
+
+
+In [28]: Libro.objects.filter(librocronica__descripcion_larga__isnull=True).values('isbn','titulo','librocronica__descripcion_larga')
+Out[28]: SELECT "libreria_libro"."isbn",
+       "libreria_libro"."titulo",
+       "libreria_librocronica"."descripcion_larga"
+  FROM "libreria_libro"
+  LEFT OUTER JOIN "libreria_librocronica"
+    ON ("libreria_libro"."isbn" = "libreria_librocronica"."libro_id")
+ WHERE "libreria_librocronica"."descripcion_larga" IS NULL
+ LIMIT 21
+
+Execution time: 0.000938s [Database: default]
+<QuerySet []>
+
+In [29]: Libro.objects.select_related('librocronica').filter(categoria__contains='python')
+Out[29]: SELECT "libreria_libro"."isbn",
+       "libreria_libro"."titulo",
+       "libreria_libro"."paginas",
+       "libreria_libro"."fecha_publicacion",
+       "libreria_libro"."imagen",
+       "libreria_libro"."desc_corta",
+       "libreria_libro"."estatus",
+       "libreria_libro"."categoria",
+       "libreria_libro"."edicion_anterior_id",
+       "libreria_libro"."editorial_id",
+       "libreria_librocronica"."descripcion_larga",
+       "libreria_librocronica"."libro_id"
+  FROM "libreria_libro"
+  LEFT OUTER JOIN "libreria_librocronica"
+    ON ("libreria_libro"."isbn" = "libreria_librocronica"."libro_id")
+ WHERE "libreria_libro"."categoria" LIKE '%python%' ESCAPE '\'
+ LIMIT 21
+
+Execution time: 0.000000s [Database: default]
+<QuerySet []>
+
+
+In [30]: LibroCronica.objects.all()[:3]
+Out[30]: SELECT "libreria_librocronica"."descripcion_larga",
+       "libreria_librocronica"."libro_id"
+  FROM "libreria_librocronica"
+ LIMIT 3
+
+Execution time: 0.000000s [Database: default]
+<QuerySet []>
+
+In [31]: LibroCronica.objects.select_related('libro').all()[:3]
+Out[31]: SELECT "libreria_librocronica"."descripcion_larga",
+       "libreria_librocronica"."libro_id",
+       "libreria_libro"."isbn",
+       "libreria_libro"."titulo",
+       "libreria_libro"."paginas",
+       "libreria_libro"."fecha_publicacion",
+       "libreria_libro"."imagen",
+       "libreria_libro"."desc_corta",
+       "libreria_libro"."estatus",
+       "libreria_libro"."categoria",
+       "libreria_libro"."edicion_anterior_id",
+       "libreria_libro"."editorial_id"
+  FROM "libreria_librocronica"
+ INNER JOIN "libreria_libro"
+    ON ("libreria_librocronica"."libro_id" = "libreria_libro"."isbn")
+ LIMIT 3
+
+Execution time: 0.000512s [Database: default]
+<QuerySet []>
+
+
+
+In [34]: consulta = Libro.objects.all().select_related('editorial').filter(categoria__icontains='python')
+    ...: dic_libros = dict(consulta.values_list('isbn','editorial__nombre'))
+    ...: print(dic_libros)
+SELECT "libreria_libro"."isbn",
+       "libreria_editorial"."nombre"
+  FROM "libreria_libro"
+ INNER JOIN "libreria_editorial"
+    ON ("libreria_libro"."editorial_id" = "libreria_editorial"."id")
+ WHERE "libreria_libro"."categoria" LIKE '%python%' ESCAPE '\'
+
+Execution time: 0.000000s [Database: default]
+{}
+
+
+In [39]: libros_con_editorial = Libro.objects.select_related('editorial')
+    ...: autores_con_libros = Autor.objects.filter(pk__in=(398, 523)).prefetch_related(
+    ...:     Prefetch('libro', queryset=libros_con_editorial, to_attr='libros_prefetch')
+    ...: )
+    ...:
+    ...: # Iteramos sobre los autores para imprimir los resultados
+    ...: autores_con_libros_resultado = []
+    ...: for autor in autores_con_libros:
+    ...:     autor_info = {
+    ...:         'nombre': autor.nombre,
+    ...:         'libros': [
+    ...:             {
+    ...:                 'isbn': libro.isbn,
+    ...:                 'editorial_nombre': libro.editorial.nombre
+    ...:             }
+    ...:             for libro in autor.libros_prefetch
+    ...:         ]
+    ...:     }
+    ...:     autores_con_libros_resultado.append(autor_info)
+    ...:
+    ...: print(autores_con_libros_resultado)
+SELECT "libreria_autor"."id",
+       "libreria_autor"."nombre"
+  FROM "libreria_autor"
+ WHERE "libreria_autor"."id" IN (398, 523)
+
+Execution time: 0.018560s [Database: default]
+[]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+In [39]: libros_con_editorial = Libro.objects.select_related('editorial')
+    ...: autores_con_libros = Autor.objects.filter(pk__in=(398, 523)).prefetch_related(
+    ...:     Prefetch('libro', queryset=libros_con_editorial, to_attr='libros_prefetch')
+    ...: )
+    ...:
+    ...: # Iteramos sobre los autores para imprimir los resultados
+    ...: autores_con_libros_resultado = []
+    ...: for autor in autores_con_libros:
+    ...:     autor_info = {
+    ...:         'nombre': autor.nombre,
+    ...:         'libros': [
+    ...:             {
+    ...:                 'isbn': libro.isbn,
+    ...:                 'editorial_nombre': libro.editorial.nombre
+    ...:             }
+    ...:             for libro in autor.libros_prefetch
+    ...:         ]
+    ...:     }
+    ...:     autores_con_libros_resultado.append(autor_info)
+    ...:
+    ...: print(autores_con_libros_resultado)
+SELECT "libreria_autor"."id",
+       "libreria_autor"."nombre"
+  FROM "libreria_autor"
+ WHERE "libreria_autor"."id" IN (398, 523)
+
+Execution time: 0.018560s [Database: default]
+[]
+
+
+
+
+FILA 2
+# 1. Crea 5 autores y relaciónalos con el libro “Ciencia para Todos” usando bulk_create.
+
+In [1]: autor = Autor.objects.bulk_create([Autor(nombre="Autor1"),Autor(nombre="Autor2"),Autor(nombre="Autor3"),Autor(nombre="Autor4"), Autor(nombre="Autor5")])
+BEGIN
+
+Execution time: 0.000000s [Database: default]
+INSERT INTO "libreria_autor" ("nombre")
+VALUES ('Autor1'), ('Autor2'), ('Autor3'), ('Autor4'), ('Autor5') RETURNING "libreria_autor"."id"
+
+Execution time: 0.012844s [Database: default]
+
+# 2. Encuentra todos los autores cuyos nombres contengan la letra "e" y que hayan escrito un libro en la categoría "Educación".
+autores = Autor.objects.filter(
+    nombre__icontains="e",
+    libro__categoria="Educación"
+).distinct()
+
+
+# 3. Busca libros publicados entre los años 2018 y 2022, con más de 300 páginas, y que no pertenezcan a la categoría "Historia".
+
+libros = Libro.objects.filter(
+    anio_publicacion__range=(2018, 2022),
+    paginas__gt=300
+).exclude(categoria="Historia")
+
+mal .......
+# 4. Dado el libro “Cuentos Cortos”, muestra todos sus autores.
+libro = Libro.objects.get(titulo="Cuentos Cortos")
+autores = libro.autores.all()  
+
+
+# 5. Decrementa el número de páginas en 25 para todos los libros con más de 200 páginas y cuyo autor sea “Luis”
+
+
+libros = Libro.objects.filter(
+    paginas__gt=200,
+    autores__nombre="Luis"
+)
+libros.update(paginas=F('paginas') - 25) 
+
+
+
+
+
+
+
+
